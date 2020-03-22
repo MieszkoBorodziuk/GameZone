@@ -1,20 +1,46 @@
-class Slider {
-    constructor(elemSelector, sliderElem) {
+import {Slide} from "./Slide.js";
+
+export class Slider {
+    constructor(elemSelector) {
         this.currentSlide = 0;
         this.sliderSelector = elemSelector;
-        this.elem = null;
         this.slider = null;
         this.slides = null;
         this.prev = null;
         this.next = null;
 
-
         this.generateSlider();
         this.changeSlide(this.currentSlide);
     }
 
+    createHTMLElement(type, className) {
+        const elem = document.createElement(type);
+        elem.classList.add(className);
+        return elem;
+    }
+
+    generateSlide(slide) {
+        const bg = this.createHTMLElement('div', "SliderSlide");
+        bg.style.backgroundImage = "url(" + slide.bgImage + ")";
+        const logo = this.createHTMLElement('img', "SliderLogo");
+        logo.src = slide.logoImage;
+        const title = this.createHTMLElement('h2', "SliderTitle");
+        title.textContent = slide.title;
+
+        bg.appendChild(logo);
+        bg.appendChild(title);
+
+        return bg;
+
+    }
 
     generateSlider() {
+        const tab = [new Slide("img/Widok1.jpg", "img/logo.png", "Super partia kurwo!!!"),
+            new Slide("img/Widok2.jpg", "img/logo.png", "Super partia kurwo!!!"),
+            new Slide("img/Widok3.jpg", "img/logo.png", "Super partia kurwo!!!"),
+            new Slide("img/Widok4.jfif", "img/logo.png", "Super partia kurwo!!!"),
+            new Slide("img/Widok5.jpg", "img/logo.png", "Super partia kurwo!!!")];
+
 
         this.slider = document.querySelector(this.sliderSelector);
         this.slider.classList.add("slider");
@@ -23,17 +49,15 @@ class Slider {
         const slidesCnt = document.createElement("div");
         slidesCnt.classList.add("sliderContainer");
 
-        this.slides = this.slider.children;
 
-        while (this.slides.length) {
-            this.slides[0].classList.add("SliderSlide");
-            slidesCnt.appendChild(this.slides[0]);
+        tab.forEach(e => {
+            const slide = this.generateSlide(e);
+            slidesCnt.appendChild(slide);
+        });
 
-        }
 
-        this.slides = slidesCnt.querySelectorAll(".SliderSlide");
         this.slider.appendChild(slidesCnt);
-
+        this.slides = slidesCnt.querySelectorAll(".SliderSlide");
         this.createPrevNext();
     }
 
